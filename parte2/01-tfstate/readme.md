@@ -41,16 +41,16 @@ terraform apply -auto-approve -lock=false -parallelism=10  -var-file=../environm
 #primeiro deploy
 1- executar
 
-terraform init -reconfigure -backend-config=../environments/blackend-prd-01.tfvars
+terraform init -reconfigure -backend-config=../../environments/blackend-prd-01.tfvars
 
 2 - executar com o blackend comentado
 
 3- alterar variaveis em /environments/prd-01.tfvars conforme o necessário
 
-4- executar terraform plan -lock=false -parallelism=10 -out=plan.out -var-file=../environments/prd-01.tfvars
+4- executar terraform plan -lock=false -parallelism=10 -out=plan.out -var-file=../../environments/prd-01.tfvars
 
 5- executar e criar os recursos que vão ser usados para a pipeline com o blackend comentado
 
-terraform apply -auto-approve -lock=false -parallelism=10  -var-file=../environments/prd-01.tfvars
+terraform apply -auto-approve -lock=false -parallelism=10  -var-file=../../environments/prd-01.tfvars
 
-4- executar terraform init -reconfigure -backend-config=../environments/blackend-prd-01.tfvars  para migrar o state para o s3
+4- executar terraform init -reconfigure -backend-config=../../environments/blackend-prd-01.tfvars para migrar o state para o s3

@@ -1,4 +1,4 @@
-#nome do repositorio
+#nome do repositorio ecr
 
 imagename =  "labchallenge"
 

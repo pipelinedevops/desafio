@@ -1,13 +1,22 @@
 #nome do repositorio
 
+#nome do cluster ecs
+
 cluster_name =  "lab-ecs"
+
+#repository name ecr
 
 reponame = "labchallenge"
 
+#tagname ecr
+
 imagetag = "v0.2"
+
+#image name acr
 
 imagename = "app"
 
+#nome do service ecs
 ecs_servicename = "ecs_app"
 
 ##
