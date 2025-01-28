@@ -13,13 +13,6 @@ env:
   AWS_REGION: ${{ (github.ref == 'refs/heads/development') && 'us-east-1' || (github.ref == 'refs/heads/stg') && 'us-east-1' || 'us-east-1' }} #us-east-1
   #01
   directory-01: /parte2/01-tfstate
-  #02
-  directory-02: 02-repo
-  #03                  
-  directory-03-repo: ../03-image/
-  directory-03: 03-image
-  #04
-  directory-04: 04-ecs
   repo_name: labchallenge
   image_name: app
   tag_name: v0.2

@@ -11,19 +11,12 @@ env:
   #AWS_ACCESS_KEY_ID: ${{ secrets.TF_AWS_LAB_ID }}
   #AWS_SECRET_ACCESS_KEY: ${{ secrets.TF_AWS_LAB_KEY }}
   AWS_REGION: ${{ (github.ref == 'refs/heads/development') && 'us-east-1' || (github.ref == 'refs/heads/stg') && 'us-east-1' || 'us-east-1' }} #us-east-1
-  #01
-  directory-01: 01-tfstate
   #02
   directory-02: /parte1/02-repo
   #03                  
   directory-03-repo: /parte1/03-image/ #../03-image/
   directory-03: /parte1/03-image/
-  #04
-  directory-04: /parte2/04-ecs
-  repo_name: labchallenge
-  image_name: app
-  tag_name: v0.2
-
+  
 permissions:
   actions: read  # Ler informações sobre as ações
   contents: read
