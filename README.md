@@ -40,3 +40,7 @@ tag_name: v0.2  #tag name
 
 obs: a primeira exeução apenas o repositorio vai ser criado com seus requisitos, na segunda os recursos do ecs devem  ser criados com sucesso
 
+Solução:
+
+-Foi escrito um ambiente iac pensando em um padrão de organização. mas, é possivel usar em outros tipos de ambiente
+-Para monitoramento foi usado cloudwach habilitado junto ao ecs para os containers e logs

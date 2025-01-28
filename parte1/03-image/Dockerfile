@@ -10,6 +10,8 @@ RUN npm install \
     npm install --save-dev @types/express \
     npm install --save-dev ts-node \
     npm install ts-node typescript --save-dev \
+    npm install @aws-sdk/client-cloudwatch-logs \
+    npm install express prom-client \
     npm init -y
 COPY --chown=node:node . .
 USER node
