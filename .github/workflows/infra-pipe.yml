@@ -1,0 +1,78 @@
+
+name: Deploy infra
+
+on:
+  push:
+    branches: [ "main" ]
+    
+env:
+  AWS_ACCESS_KEY_ID: ${{ (github.ref == 'refs/heads/development' && secrets.AWS_ACCESS_KEY_DEV) || (github.ref == 'refs/heads/stg' && secrets.AWS_ACCESS_KEY_STG) || secrets.TF_AWS_LAB_ID }}
+  AWS_SECRET_ACCESS_KEY: ${{ (github.ref == 'refs/heads/development' && secrets.AWS_SECRET_ACCESS_KEY_DEV) || (github.ref == 'refs/heads/stg' && secrets.AWS_SECRET_ACCESS_KEY_STG) || secrets.TF_AWS_LAB_KEY }} 
+  #AWS_ACCESS_KEY_ID: ${{ secrets.TF_AWS_LAB_ID }}
+  #AWS_SECRET_ACCESS_KEY: ${{ secrets.TF_AWS_LAB_KEY }}
+  AWS_REGION: ${{ (github.ref == 'refs/heads/development') && 'us-east-1' || (github.ref == 'refs/heads/stg') && 'us-east-1' || 'us-east-1' }} #us-east-1
+  #01
+  directory-01: 01-tfstate
+  #02
+  directory-02: 02-repo
+  #03                  
+  directory-03-repo: ../03-image/
+  directory-03: 03-image
+  #04
+  directory-04: 04-ecs
+  repo_name: labchallenge
+  image_name: app
+  tag_name: v0.2
+
+permissions:
+  actions: read  # Ler informações sobre as ações
+  contents: read
+  #contents: write  # Modificar o conteúdo do repositório
+  security-events: write  # Gravar eventos de segurança
+  packages: write  # Modificar pacotes (GitHub Packages, por exemplo)
+  deployments: write  # Gerenciar implantações
+  checks: write  # Criar verificações
+  issues: write  # Modificar problemas
+  pull-requests: write  # Modificar solicitações de pull
+
+jobs:
+  configpipeline:
+    name: 00-config pipeline
+    runs-on: ubuntu-latest
+    environment: production
+
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v4
+
+    - name: Configure AWS credentials
+      uses: aws-actions/configure-aws-credentials@v1
+      with:
+        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        aws-region: ${{ env.AWS_REGION }}
+
+  deploystate:
+      name: 01-state
+      runs-on: ubuntu-latest
+      needs: configpipeline
+      env:
+        ENVIRONMENT_TFVARS: ${{ (github.ref == 'refs/heads/development') && 'environments/dev.tfvars' || (github.ref == 'refs/heads/stg') && 'environments/stg.tfvars' ||  '../environments/prd-01.tfvars'  }} #editar o caminho conforme necessário
+        BACKEND_CONFIG: ${{ (github.ref == 'refs/heads/development') && 'environments/backend-dev.tf' || (github.ref == 'refs/heads/stg') && 'environments/backend-stg.tf' || '../environments/blackend-prd-01.tfvars' }}  #editar o caminho conforme necessário
+        AWS_DEFAULT_REGION: ${{ (github.ref == 'refs/heads/development') && 'us-east-1' || (github.ref == 'refs/heads/stg') && 'us-east-1' || 'us-east-1' }} 
+      environment: production
+      steps:
+        - name: Checkout
+          uses: actions/checkout@v4 
+        
+        - name: SetupTerraform
+          uses: hashicorp/setup-terraform@v3  
+
+        - name: deploy state
+          run: | 
+           terraform init -reconfigure -backend-config="${{ env.BACKEND_CONFIG }}"
+           terraform plan -lock=false  -parallelism=10 -out=plan.out -var-file="${{ env.ENVIRONMENT_TFVARS }}" 
+           terraform apply -auto-approve -lock=false -parallelism=10 -var-file="${{ env.ENVIRONMENT_TFVARS }}"
+
+          working-directory:  ${{ env.directory-01 }}   
+     
