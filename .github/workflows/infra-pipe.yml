@@ -12,7 +12,7 @@ env:
   #AWS_SECRET_ACCESS_KEY: ${{ secrets.TF_AWS_LAB_KEY }}
   AWS_REGION: ${{ (github.ref == 'refs/heads/development') && 'us-east-1' || (github.ref == 'refs/heads/stg') && 'us-east-1' || 'us-east-1' }} #us-east-1
   #01
-  directory-01: /parte2/01-tfstate
+  directory-01: parte2/01-tfstate
   repo_name: labchallenge
   image_name: app
   tag_name: v0.2
@@ -63,8 +63,6 @@ jobs:
 
         - name: deploy state
           run: | 
-           ls -la
-           ls -la ../
            terraform init -reconfigure -backend-config="${{ env.BACKEND_CONFIG }}"
            terraform plan -lock=false  -parallelism=10 -out=plan.out -var-file="${{ env.ENVIRONMENT_TFVARS }}" 
            terraform apply -auto-approve -lock=false -parallelism=10 -var-file="${{ env.ENVIRONMENT_TFVARS }}"

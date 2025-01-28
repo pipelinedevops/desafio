@@ -12,7 +12,7 @@ env:
   #AWS_SECRET_ACCESS_KEY: ${{ secrets.TF_AWS_LAB_KEY }}
   AWS_REGION: ${{ (github.ref == 'refs/heads/development') && 'us-east-1' || (github.ref == 'refs/heads/stg') && 'us-east-1' || 'us-east-1' }} #us-east-1
   #04
-  directory-04: /parte2/04-ecs
+  directory-04: parte2/04-ecs
   repo_name: labchallenge
   image_name: app
   tag_name: v0.2
