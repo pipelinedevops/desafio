@@ -16,6 +16,10 @@ env:
   #03                  
   directory-03-repo: parte1/03-image/ #../03-image/
   directory-03: parte1/03-image/
+  repo_name: labchallenge
+  image_name: app
+  tag_name: v0.2
+
   
 permissions:
   actions: read  # Ler informações sobre as ações
