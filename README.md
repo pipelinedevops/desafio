@@ -1,3 +1,24 @@
+# Infrastructure as Code (IaC) - AWS Services
+
+Este repositório contém as configurações de Terraform para gerenciar a infraestrutura AWS para serviços AWs, utilizando as melhores práticas de automação com GitHub Actions.
+
+## Estrutura do Repositório
+
+
+```
+ /parte1
+    /02-repo    #Recursos relativo ao repositório do ecr
+    /03-image   #Estrutura para gerar a imagem docker
+        /src
+        /observability
+/parte2
+    /01-tfstate #Recursos para o blackend da esteira (s3 / dynamodb etc..)
+        /tfstate-bucket #configurações do modulo  
+   /04-ecs     #Recursos  para implantar o ecs bem como a comunicação necessária para funcionar (excluindo a vpc)     
+/environments #variaveis de ambiente para utilizar na esteira
+
+```
+
 # desafio
 
 
