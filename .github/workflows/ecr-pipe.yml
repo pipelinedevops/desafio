@@ -1,8 +1,8 @@
 
 name: Deploy ECR image
 
-on:
-  push:
+#on:
+#  push:
     #branches: [ "main" ]
     
 env:
