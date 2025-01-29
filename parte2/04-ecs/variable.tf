@@ -10,6 +10,16 @@ variable "ecs_servicename" {
    #default  =  "labchallenge"
  }
 
+variable "task_number_max" {
+  type = number
+  description = "numero de taks maximo"
+  #default = 0
+}
+variable "task_number_min" {
+  type = number
+  description = "numero de taks minimo"
+  #default = 0
+}
 
 variable "reponame" {
    type = string

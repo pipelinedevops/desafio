@@ -87,13 +87,14 @@ resource "aws_ecs_service" "example" {
   name            = var.ecs_servicename #"example-service"
   cluster         = aws_ecs_cluster.example.id
   task_definition = aws_ecs_task_definition.example.arn
-  desired_count   = 3
+  desired_count   = var.task_number_min#3
   launch_type     = "FARGATE" #"FARGATE" #"FARGATE" "EC2" "EXTERNAL"
   availability_zone_rebalancing  = "ENABLED"
   deployment_maximum_percent = 200 #minimo 100
   deployment_minimum_healthy_percent = 50
   enable_ecs_managed_tags = true
   propagate_tags          = "SERVICE"
+  force_new_deployment = true
 
 /*
    alarms {
@@ -104,6 +105,9 @@ resource "aws_ecs_service" "example" {
     ]
   }
   */
+   lifecycle {
+    ignore_changes = [desired_count]
+  }
 
   load_balancer {
     target_group_arn = aws_lb_target_group.ecs_tg.arn #"arn:aws:elasticloadbalancing:us-east-1:340752805961:targetgroup/internal9090/0f674ee7668313cf" #aws_lb_target_group.ecs_tg.arn
@@ -156,3 +160,40 @@ service_connect_configuration {
 }
 
 #######
+
+#######
+resource "aws_appautoscaling_target" "ecs_target" {
+  max_capacity       = var.task_number_max #6
+  min_capacity       = var.task_number_min #3
+  resource_id        = "service/${aws_ecs_cluster.example.name}/${aws_ecs_service.example.name}" #"service/clusterName/ecs"
+  scalable_dimension = "ecs:service:DesiredCount"
+  service_namespace  = "ecs"
+}
+
+resource "aws_appautoscaling_policy" "ecs_policy" {
+  name               = "scale-up"
+  policy_type        =  "TargetTrackingScaling"# [PredictiveScaling, RightSizing, StepScaling, TargetTrackingScaling]
+  resource_id        =  "service/${aws_ecs_cluster.example.name}/${aws_ecs_service.example.name}" #aws_appautoscaling_target.ecs_target.resource_id
+  scalable_dimension = aws_appautoscaling_target.ecs_target.scalable_dimension
+  service_namespace  = aws_appautoscaling_target.ecs_target.service_namespace
+
+  target_tracking_scaling_policy_configuration {
+    predefined_metric_specification {
+      predefined_metric_type =  "ECSServiceAverageCPUUtilization"
+    }
+    target_value = 30
+    scale_in_cooldown  = 5
+    scale_out_cooldown = 10
+  }
+  /*
+ target_tracking_scaling_policy_configuration {
+    target_value       = 50.0
+    predefined_metric_specification {
+      predefined_metric_type = "ECSServiceAverageCPUUtilization"
+    }
+    scale_in_cooldown  = 300
+    scale_out_cooldown = 300
+  }
+  */
+
+}

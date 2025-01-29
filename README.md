@@ -42,5 +42,9 @@ obs: a primeira exeução apenas o repositorio vai ser criado com seus requisito
 
 Solução:
 
+
+-Por escolha de arquitetura / custo foi criado um ambiente usando subnet publica e fargate para não usar nat/vpc endpoint oque tornaria mais caro criar/manter o ambiente
+
 -Foi escrito um ambiente iac pensando em um padrão de organização. mas, é possivel usar em outros tipos de ambiente
+
 -Para monitoramento foi usado cloudwach habilitado junto ao ecs para os containers e logs
